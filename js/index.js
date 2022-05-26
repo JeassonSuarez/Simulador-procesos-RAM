@@ -247,7 +247,7 @@ const calculos = () => {
     $d.querySelector(".usada").children[0].textContent = `USADA: ${usada}`;
     $d.querySelector(".libre").children[0].textContent = `LIBRE: ${libre}`;
   }else{
-    usada = (programasRAM.length)*1024*1024;
+    usada = usada+(programasRAM.length)*1024*1024;
     $d.querySelector(".usada").children[0].textContent = `USADA: ${usada}`;
     libre = libre-usada;
     $d.querySelector(".libre").children[0].textContent = `LIBRE: ${libre}`;
