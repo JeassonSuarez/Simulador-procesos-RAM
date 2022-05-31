@@ -86,6 +86,13 @@ const kernel = 1048576,
     614403,
     2364,
     "https://icon-library.com/images/oracle-icon-png/oracle-icon-png-14.jpg"
+  ),
+  noProgram = new Program(
+    "",
+    0,
+    0,
+    0,
+    ""
   );
 
 let programas = [
@@ -99,20 +106,24 @@ let programas = [
   GTA5,
   Oracle
 ],
-pEjecutados = 0;
+pEjecutados = 0,
+programasRAM = [];
 
-let programasRAM = [];
+for (let index = 0; index < 15; index++) {
+  programasRAM.push(noProgram);
+}
 
 for (let p of programas) {
   p.resize();
   if (p.nombre!=="S.O.") {
-  fig = `<figure>
-    <img src="${p.logo}" alt="${p.nombre}">
-    <figcaption><span>${p.nombre}</span></figcaption>
+  fig = `<figure data-name="${p.nombre}">
+    <img src="${p.logo}" alt="${p.nombre}" data-name="${p.nombre}">
+    <figcaption data-name="${p.nombre}"><span data-name="${p.nombre}">${p.nombre}</span></figcaption>
   </figure>`;
   $d.querySelector(".icons").innerHTML += fig;
   }
 }
+
 
 col = randomColor();
 segs[0].querySelector("span").textContent = SO.nombre;
@@ -120,6 +131,7 @@ segs[0].setAttribute(
   "style",
   `background: ${col[0]};text-shadow: -1.5px 2.5px 2px black, 1.5px -1.5px 0.08em ${col[1]}, 0 0 2em black;`
 );
+
 
 $d.querySelectorAll(".icons figure").forEach((e) => {
   e.addEventListener("click", (fig) => {
@@ -131,76 +143,85 @@ $d.querySelectorAll(".icons figure").forEach((e) => {
     while (!$figure.matches("figure")) $figure = $figure.parentNode;
     $figure.classList.add("figclick");
   });
-  e.addEventListener("dblclick", (fig) => {
-    $d.querySelector(".proc").innerHTML = `<article><span>Item</span></article>
-    <article><span>Nombre</span></article>
-    <article><span>Tamaño en disco</span></article>
-    <article><span>Tamaño codigo</span></article>
-    <article><span>Datos inicializados</span></article>
-    <article><span>Datos sin inicializar</span></article>
-    <article><span>Memoria inicial</span></article>
-    <article><span>Memoria inicial (KiB)</span></article>`;
-    //console.log(e.children[0].getAttribute("alt"));
+});
+
+$d.addEventListener("dblclick", e=>{
+  if (e.target.matches(".icons figure") || e.target.matches(".icons img") || e.target.matches(".icons figcaption") || e.target.matches(".icons span")) {
+    //console.log(e.target);
+    detalle();
     if (pEjecutados===15) {
       alert("No se puede ejecutar mas, debe cerrar algun programa");
     }else{
-      programas.forEach(elemento => {
-        if (elemento.nombre === e.children[0].getAttribute("alt")) {
-            if (elemento.memoria>particion) {
-              alert(`No es posible ejecutar ${elemento.nombre} debido a que su tamaño es ${elemento.memoria}, y las particiones son maximo de ${particion}`)
-              renderizar();
-            }else{
-              programasRAM.push(elemento);
-              pEjecutados++;
+      // ejecucion de programas
+      if (location.pathname.slice(1)==="index.html") {
+        programas.forEach(elemento => {
+          if (elemento.nombre === e.target.getAttribute("data-name")) {
               calculos();
-              //console.log(elemento.memoria, "tamaño", elemento.nombre);
-              // location.reload();
-              //console.log(programas);
-              renderizar();
-            }
-        }
-      });
-    }
-  });
-});
-//console.log(programas);
-
-document.querySelectorAll(".article__pEjecucion").forEach((elemento, i) => {
-    elemento.addEventListener("dblclick", e => {
-      if (e.target.children[0].textContent === "S.O.") {
-        alert("No puede cerrar el SO")
-      } else {
-        pEjecutados--;
-        programasRAM.splice(i-1,1);
-        //renderizar();
-        segs[i].querySelector("span").textContent = "";
-        segs[i].setAttribute(
-          "style",
-          `background: #ddd`
-        );
-        detalle();
-        calculos();
-        //console.log(i-1, " arr: ", programasRAM);
+              if (elemento.memoria>particion) {
+                alert(`No es posible ejecutar ${elemento.nombre} debido a que su tamaño es ${elemento.memoria}, y las particiones son maximo de ${particion}`)
+                renderizar();
+              }else{
+                console.log(programasRAM.length);
+                if (programasRAM.length !== 0) {
+                  let i = -1;
+                  for (const p of programasRAM) {
+                    i++;
+                    if (p === noProgram) {
+                      programasRAM[i]=elemento;
+                      break;
+                    }
+                  }
+                }
+                pEjecutados++;
+                calculos();
+                renderizar();
+              }
+          }
+        });
       }
-    })
-});
+    }
+  }
 
+  //cerrar programas ejecutados
 
+  if (e.target.matches(".article__pEjecucion") || e.target.matches(".article__pEjecucion span")) {
+    if (e.target.children[0].textContent === "S.O.") {
+      alert("No puede cerrar el SO")
+    }else{
+      let posPrograma = parseInt(e.target.getAttribute("data-number"));
+      pEjecutados--;
+      programasRAM[posPrograma-2]=noProgram;
+      //programasRAM.splice(parseInt(e.target.getAttribute("data-number"))-2,1);
+      console.log(parseInt(e.target.getAttribute("data-number")), "--", programasRAM);
+      //renderizar();
+      segs[posPrograma-1].querySelector("span").textContent = "";
+      segs[posPrograma-1].setAttribute(
+        "style",
+        `background: #ddd`
+      );
+      detalle();
+      calculos();
+      //console.log(i-1, " arr: ", programasRAM);
+    }
+  }
+
+})
 
 const renderizar = ()=> {
   programasRAM.forEach((e, i) => {
-    col = randomColor();
-    segs[i+1].querySelector("span").textContent = e.nombre;
-    segs[i+1].setAttribute(
-      "style",
-      `background: ${col[0]};text-shadow: -1.5px 2.5px 2px black, 1.5px -1.5px 0.08em ${col[1]}, 0 0 2em black;`
-    );
-    detalle();
+    if (!(e === noProgram)) {
+      col = randomColor();
+      segs[i+1].querySelector("span").textContent = e.nombre;
+      segs[i+1].setAttribute(
+        "style",
+        `background: ${col[0]};text-shadow: -1.5px 2.5px 2px black, 1.5px -1.5px 0.08em ${col[1]}, 0 0 2em black;`
+      );
+    }
   });
+  detalle();
 }
 
 const detalle = () =>{
-  
     $d.querySelector(".proc").innerHTML = `<article><span>Item</span></article>
     <article><span>Nombre</span></article>
     <article><span>Tamaño en disco</span></article>
@@ -210,16 +231,18 @@ const detalle = () =>{
     <article><span>Memoria inicial</span></article>
     <article><span>Memoria inicial (KiB)</span></article>`;
     programasRAM.forEach((e, i) => {
-      let $articles = `<article><span>P${i}</span></article>`;
-      for (const key in e) {
-        if (key !== "logo") {
-          $articles += `<article><span>${e[key]}</span></article>`;
+      if (!(e === noProgram)) {
+        let $articles = `<article><span>P${i}</span></article>`;
+        for (const key in e) {
+          if (key !== "logo") {
+            $articles += `<article><span>${e[key]}</span></article>`;
+          }
         }
+        $articles += `<article><span>${
+          parseInt((e.memoria / 1024) * 100) / 100
+        }</span></article>`;
+        $d.querySelector(".proc").innerHTML += $articles;
       }
-      $articles += `<article><span>${
-        parseInt((e.memoria / 1024) * 100) / 100
-      }</span></article>`;
-      $d.querySelector(".proc").innerHTML += $articles;
     });
 }
 
@@ -241,19 +264,19 @@ datos();
 
 const calculos = () => {
   let usada = 1*1024*1024,
-    libre = 16*1024*1024-usada;
+    libre = 16*1024*1024,
+    pdif = 0;
 
-  if (programasRAM.length === 0) {
-    $d.querySelector(".usada").children[0].textContent = `USADA: ${usada}`;
-    $d.querySelector(".libre").children[0].textContent = `LIBRE: ${libre}`;
-  }else{
-    usada = usada+(programasRAM.length)*1024*1024;
+    programasRAM.forEach((e, i) => {
+      if (!(e === noProgram)) {
+        pdif++;
+      }
+    });
+    usada = usada+(pdif)*1024*1024;
     $d.querySelector(".usada").children[0].textContent = `USADA: ${usada}`;
     libre = libre-usada;
     $d.querySelector(".libre").children[0].textContent = `LIBRE: ${libre}`;
-  }
+
 }
 
 calculos();
-
-

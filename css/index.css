@@ -50,7 +50,7 @@ h1{
   justify-content: center;
   border: 1px solid #000;
   width: fit-content;
-  height: fit-content;
+  height: 100%;
   grid-row-start: 2;
   grid-row-end: 4;
 }
@@ -171,3 +171,68 @@ h1{
   display: none;
 }
 
+.pEVariables:nth-child(1){
+  height: 6.25%;
+}
+.pEVariables:nth-child(2){
+  height: 12.5%;
+}
+.pEVariables:nth-child(3){
+  height: 12.5%;
+}
+.pEVariables:nth-child(4){
+  height: 18.75%;
+}
+.pEVariables:nth-child(5){
+  height: 6.25%;
+}
+.pEVariables:nth-child(6){
+  height: 6.25%;
+}
+.pEVariables:nth-child(7){
+  height: 6.25%;
+}
+.pEVariables:nth-child(8){
+  height: 6.25%;
+}
+.pEVariables:nth-child(9){
+  height: 3.125%;
+}
+.pEVariables:nth-child(10){
+  height: 3.125%;
+}
+.pEVariables:nth-child(11){
+  height: 3.125%;
+}
+.pEVariables:nth-child(12){
+  height: 3.125%;
+}
+.pEVariables:nth-child(13){
+  height: 3.125%;
+}
+.pEVariables:nth-child(14){
+  height: 3.125%;
+}
+.pEVariables:nth-child(15){
+  height: 3.125%;
+}
+.pEVariables:nth-child(16){
+  height: 3.125%;
+}
+
+.div-select__ajuste{
+  background-color: red;
+  width: 100vw;
+  height: 130vh;
+  position: absolute;
+  top: 0;
+}
+
+.select__ajuste{
+  width: 80%;
+  height:200px;
+  font-size: 40px;
+  display: block;
+  margin: auto;
+  margin-top: 230px;
+}
