@@ -186,18 +186,16 @@ const detalle = () =>{
     <article><span>Memoria inicial</span></article>
     <article><span>Memoria inicial (KiB)</span></article>`;
     programasRAM.forEach((e, i) => {
-    if (!(e.programa === noProgram) && !(e.programa === programas[0])) {
-        let $articles = `<article><span>P${i-1}</span></article>`;
-        for (const key in e.programa) {
-            if (key !== "logo") {
-                $articles += `<article><span>${e.programa[key]}</span></article>`;
+        if (!(e.programa === noProgram) && !(e.programa === programas[0])) {
+            let $articles = `<article><span>P${i-1}</span></article>`;
+            for (const key in e.programa) {
+                if (key !== "logo") {
+                    $articles += `<article><span>${e.programa[key]}</span></article>`;
+                }
             }
+            $articles += `<article><span>${parseInt((e.programa.memoria / 1024) * 100) / 100}</span></article>`;
+            $d.querySelector(".proc").innerHTML += $articles;
         }
-        $articles += `<article><span>${
-        parseInt((e.programa.memoria / 1024) * 100) / 100
-        }</span></article>`;
-        $d.querySelector(".proc").innerHTML += $articles;
-    }
     });
 }
 
@@ -242,6 +240,29 @@ let arrPos = [];
 
 const $ajuste = $d.querySelector(".select__ajuste");
 
+let paraPrograma = (e) => {
+    if (e.target.matches(".article__pEjecucion") || e.target.matches(".article__pEjecucion span")) {
+        if (e.target.children[0].textContent === "S.O.") {
+            alert("No puede cerrar el SO")
+        }else{
+            let posPrograma = parseInt(e.target.getAttribute("data-number"));
+            pEjecutados--;
+            programasRAM[posPrograma-1].programa=noProgram;
+            //programasRAM.splice(parseInt(e.target.getAttribute("data-number"))-2,1);
+            //console.log(parseInt(e.target.getAttribute("data-number")), "--", programasRAM);
+            //renderizar();
+            segs[posPrograma-1].querySelector("span").textContent = "";
+            segs[posPrograma-1].setAttribute(
+                "style",
+                `background: #ddd`
+            );
+            detalle();
+            calculos();
+            //console.log(i-1, " arr: ", programasRAM);
+        }
+    }
+}
+
 let pAjuste = () => {
     //primer ajuste
     $d.querySelector(".div-select__ajuste").setAttribute("hidden", true);
@@ -255,7 +276,7 @@ let pAjuste = () => {
                 // ejecucion de programas
                 programas.forEach(elemento => {
                     if (elemento.nombre === e.target.getAttribute("data-name")) {
-                        // let i = 0;
+                        let i = 0;
                         for (const e of programasRAM) {
                             // i++;
                             // console.log(`Memoria en pos ${i}: ${e.tam}`);
@@ -266,10 +287,14 @@ let pAjuste = () => {
                                 //console.log("CABE");
                                 e.programa = elemento;
                                 pEjecutados++;
-                                console.log(pEjecutados);
+                                //console.log(pEjecutados);
                                 break;
-                            }else{
-
+                            }else if(elemento.memoria > e.tam){
+                                i++
+                                // console.log(i);
+                                if (i===15) {
+                                    alert(`El programa ${elemento.nombre} pesa ${elemento.memoria} y no es posible ejecutarlo, ya que no cabe en las particiones`);
+                                }
                             }
                         }
                         renderizar();
@@ -282,12 +307,72 @@ let pAjuste = () => {
                 });
             }
         }
+
+    paraPrograma(e);
+    // for (const e of programasRAM) {
+    //     console.log(e.programa.nombre);
+    // }
     });
 }
 
 let mAjuste = () => {
     $d.querySelector(".div-select__ajuste").setAttribute("hidden", true);
     console.log("MEJOR AJUSTE");
+    $d.addEventListener("dblclick", e=>{
+        let memOrdenada = [];
+        programasRAM.forEach((e, i) => {
+            if (e.programa === noProgram) {
+                memOrdenada.push(e.tam);
+            }
+        });
+        memOrdenada.sort(function(a, b) {
+            return a - b;
+        });
+        console.log(memOrdenada);
+        if (e.target.matches(".icons figure") || e.target.matches(".icons img") || e.target.matches(".icons figcaption") || e.target.matches(".icons span")) {
+            //console.log(e.target);
+            detalle();
+            if (pEjecutados===15) {
+            alert("No se puede ejecutar mas, debe cerrar algun programa");
+            }else{
+                // ejecucion de programas
+                programas.forEach(elemento => {
+                    if (elemento.nombre === e.target.getAttribute("data-name")) {
+                        let aux = 0;
+                        for (const tam of memOrdenada) {
+                            if (elemento.memoria<tam) {
+                                for (let i = 0; i < programasRAM.length; i++) {
+                                    if (programasRAM[i].tam === tam && programasRAM[i].programa === noProgram) {
+                                        programasRAM[i].programa = elemento;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }else{
+                                aux++;
+                            }
+                        }
+                        if (aux === memOrdenada.length) {
+                            alert(`No se puede ejecutar el programa ${elemento.nombre} debido a que pesa ${elemento.memoria}, y no cabe en las particiones disponibles`);
+                        }
+                        renderizar();
+                        detalle();
+                        calculos();
+                        // programasRAM.forEach(element => {
+                        //     console.log(element.tam,"-",element.programa.nombre);
+                        // });
+                    }
+                });
+            }
+        }
+
+    paraPrograma(e);
+    // for (const e of programasRAM) {
+    //     console.log(e.programa.nombre);
+    // }
+    });
+
+
 }
 
 let peorAjuste = () => {
@@ -307,3 +392,33 @@ $ajuste.addEventListener("change", e =>{
     }
 })
 
+// let i = 0;
+// for (const e of programasRAM) {
+// i++;
+// console.log(`Memoria en pos ${i}: ${e.tam}`);
+// console.log(`Programa clickeado: ${elemento.memoria}`);
+// console.log(`Programa Clickeado < pos ${i}:${(elemento.memoria < e.tam) }`);
+// console.log("--------------------------------");
+
+// for (const e of programasRAM) {
+// if (menor <= e.tam) {
+// menor = menor;
+// }else{
+// menor = e.tam;
+// }
+// }
+
+// if (elemento.memoria < e.tam && e.programa === noProgram ) {
+// //console.log("CABE");
+// e.programa = elemento;
+// pEjecutados++;
+// //console.log(pEjecutados);
+// break;
+// }else if(elemento.memoria > e.tam){
+// i++
+// // console.log(i);
+// if (i===15) {
+// alert(`El programa ${elemento.nombre} pesa ${elemento.memoria} y no es posible ejecutarlo, ya que no cabe en las particiones`);
+// }
+// }
+// }
