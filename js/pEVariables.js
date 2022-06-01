@@ -7,6 +7,18 @@ randomColor = () => {
         ];
 };
 
+$d.addEventListener("click", (e)=>{
+    if (e.target.matches(".panel-btn") || e.target.matches(`${".panel-btn"} *`)) {
+        $d.querySelector(".panel").classList.toggle("is-active");
+        $d.querySelector(".panel-btn").classList.toggle("is-active");
+    }
+
+    if (e.target.matches(".menu a")) {
+        $d.querySelector(".panel").classList.remove("is-active");
+        $d.querySelector(".panel-btn").classList.remove("is-active");
+    }
+})
+
 segs = $d.querySelectorAll(".ram article");
 
 class Program {
@@ -378,6 +390,61 @@ let mAjuste = () => {
 let peorAjuste = () => {
     $d.querySelector(".div-select__ajuste").setAttribute("hidden", true);
     console.log("PEOR AJUSTE");
+
+    $d.addEventListener("dblclick", e=>{
+        let memOrdenada = [];
+        programasRAM.forEach((e, i) => {
+            if (e.programa === noProgram) {
+                memOrdenada.push(e.tam);
+            }
+        });
+        memOrdenada.sort(function(a, b) {
+            return a - b;
+        }).reverse();
+        //console.log(memOrdenada);
+        if (e.target.matches(".icons figure") || e.target.matches(".icons img") || e.target.matches(".icons figcaption") || e.target.matches(".icons span")) {
+            //console.log(e.target);
+            detalle();
+            if (pEjecutados===15) {
+            alert("No se puede ejecutar mas, debe cerrar algun programa");
+            }else{
+                // ejecucion de programas
+                programas.forEach(elemento => {
+                    if (elemento.nombre === e.target.getAttribute("data-name")) {
+                        let aux = 0;
+                        for (const tam of memOrdenada) {
+                            if (elemento.memoria<tam) {
+                                for (let i = 0; i < programasRAM.length; i++) {
+                                    if (programasRAM[i].tam === tam && programasRAM[i].programa === noProgram) {
+                                        programasRAM[i].programa = elemento;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }else{
+                                aux++;
+                            }
+                        }
+                        if (aux === memOrdenada.length) {
+                            alert(`No se puede ejecutar el programa ${elemento.nombre} debido a que pesa ${elemento.memoria}, y no cabe en las particiones disponibles`);
+                        }
+                        renderizar();
+                        detalle();
+                        calculos();
+                        // programasRAM.forEach(element => {
+                        //     console.log(element.tam,"-",element.programa.nombre);
+                        // });
+                    }
+                });
+            }
+        }
+
+    paraPrograma(e);
+    // for (const e of programasRAM) {
+    //     console.log(e.programa.nombre);
+    // }
+    });
+
 }
 
 //se verifica que tipo de ajuste se desea para el tipo de particiones

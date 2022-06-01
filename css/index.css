@@ -5,6 +5,16 @@
   margin: 0 auto;
 }
 
+:root{
+  --main-font: sans-serif;
+  --font-size: 16px;
+  --main-color: rgb(87, 190, 231);
+  --second-color: #2525256c;
+  --main-modal-color:  rgb(94, 94, 94);
+  --second-modal-color: #ffffff;
+  --container-width: 1200px;  /*Container a maxima anchura*/
+}
+
 html {
   background-color: #eaeaff;
 }
@@ -221,7 +231,7 @@ h1{
 }
 
 .div-select__ajuste{
-  background-color: red;
+  background-color: rgba(163, 163, 163, 0.507);
   width: 100vw;
   height: 130vh;
   position: absolute;
@@ -235,4 +245,68 @@ h1{
   display: block;
   margin: auto;
   margin-top: 230px;
+  border: none;
+}
+
+.select__ajuste:active{
+  border: none;
+}
+
+.panel-btn{
+  position: fixed;
+  z-index: 999;
+  right: 1vw;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--main-color);
+  margin: 5px;
+}
+
+.panel{
+  position: fixed;
+  z-index: 998;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--second-modal-color);
+  transform: translate(0, -100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.panel.is-active{
+  transform: translate(0,0)
+}
+
+.menu{
+  width: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.menu a{
+  padding: 2rem;
+  width: inherit;
+  display: block;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: var(--main-modal-color);
+  transition: all 0.3s ease;
+  font-size: 35px;
+}
+
+.menu a:hover{
+  font-weight: bold;
+  color: var(--second-modal-color);
+  background-color: var(--main-modal-color);
+  font-size: 45px;
 }
