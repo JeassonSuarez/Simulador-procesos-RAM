@@ -171,32 +171,30 @@ $d.addEventListener("dblclick", e=>{
       alert("No se puede ejecutar mas, debe cerrar algun programa");
     }else{
       // ejecucion de programas
-      if (location.pathname.slice(1)==="index.html") {
-        programas.forEach(elemento => {
-          if (elemento.nombre === e.target.getAttribute("data-name")) {
-              calculos();
-              if (elemento.memoria>particion) {
-                alert(`No es posible ejecutar ${elemento.nombre} debido a que su tamaño es ${elemento.memoria}, y las particiones son maximo de ${particion}`)
-                renderizar();
-              }else{
-                console.log(programasRAM.length);
-                if (programasRAM.length !== 0) {
-                  let i = -1;
-                  for (const p of programasRAM) {
-                    i++;
-                    if (p === noProgram) {
-                      programasRAM[i]=elemento;
-                      break;
-                    }
+      programas.forEach(elemento => {
+        if (elemento.nombre === e.target.getAttribute("data-name")) {
+            calculos();
+            if (elemento.memoria>particion) {
+              alert(`No es posible ejecutar ${elemento.nombre} debido a que su tamaño es ${elemento.memoria}, y las particiones son maximo de ${particion}`)
+              renderizar();
+            }else{
+              console.log(programasRAM.length);
+              if (programasRAM.length !== 0) {
+                let i = -1;
+                for (const p of programasRAM) {
+                  i++;
+                  if (p === noProgram) {
+                    programasRAM[i]=elemento;
+                    break;
                   }
                 }
-                pEjecutados++;
-                calculos();
-                renderizar();
               }
-          }
-        });
-      }
+              pEjecutados++;
+              calculos();
+              renderizar();
+            }
+        }
+      });
     }
   }
 
@@ -225,6 +223,57 @@ $d.addEventListener("dblclick", e=>{
 
 })
 
+
+let posP = 0,
+posPrograma = () => {
+  let pInicioDes = [], 
+  pInicioExa = [];
+  pInicioDes[0]=0;
+  for (let i = 1; i < 16; i++) {
+    pInicioDes[i]=pInicioDes[i-1]+particion;
+  }
+
+  pInicioExa[0]=0;
+  for (let i = 1; i < 16; i++) {
+    pInicioExa[i]=pInicioExa[i-1]+particion;
+  }
+  for (let i = 0; i < 16; i++) {
+    pInicioExa[i]=pInicioExa[i].toString(16);
+  }
+  console.log(pInicioDes);
+  console.log(pInicioExa)
+  $d.addEventListener("click", e => {
+    if (e.target.matches(".article__pEjecucion") || e.target.matches(".article__pEjecucion span")) {
+      if (e.target.children[0].textContent === "S.O.") {
+        posP = 0;
+      }else{
+        let posPrograma = parseInt(e.target.getAttribute("data-number"));
+        for (let i = 1; i < 16; i++){
+          if (i+1 === posPrograma) {
+            posP = pInicioExa[i];
+          }
+        }
+        $d.querySelectorAll(".article__programa").forEach((e, i) => {
+          console.log("DD");
+          if (i===0) {
+            e.children[0].textContent = `PROCESO: ${posPrograma-1}`
+          }else if (i===1) {
+            e.children[0].textContent = `DIRECCÓN: ${posP}`
+          }else if (i===2){
+            e.children[0].textContent = `MEMORIA: ${pInicioDes[posPrograma-1]}`
+          }
+        });
+        console.log(posPrograma);
+      }
+    }
+  });
+}
+
+posPrograma();
+
+
+// 
+
 const renderizar = ()=> {
   programasRAM.forEach((e, i) => {
     if (!(e === noProgram)) {
@@ -250,7 +299,7 @@ const detalle = () =>{
     <article><span>Memoria inicial (KiB)</span></article>`;
     programasRAM.forEach((e, i) => {
       if (!(e === noProgram)) {
-        let $articles = `<article><span>P${i}</span></article>`;
+        let $articles = `<article><span>P${i+1}</span></article>`;
         for (const key in e) {
           if (key !== "logo") {
             $articles += `<article><span>${e[key]}</span></article>`;
@@ -306,3 +355,4 @@ $d.getElementById("nuevo").addEventListener("submit", (e) => {
   renderProgramas();
   console.log(programas);
 });
+

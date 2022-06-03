@@ -466,3 +466,52 @@ $d.getElementById("nuevo").addEventListener("submit", (e) => {
     renderProgramas();
     console.log(programas);
 });
+
+let posP = 0,
+posPrograma = () => {
+    let pInicioDes = [], 
+    pInicioExa = [];
+    pInicioDes[0]=0;
+    for (let i = 1; i < 16; i++) {
+        //console.log(programasRAM[i-1].tam);
+        pInicioDes[i]=pInicioDes[i-1]+programasRAM[i-1].tam;
+        console.log(pInicioDes[i]);
+    }
+
+    pInicioExa[0]=0;
+    for (let i = 1; i < 16; i++) {
+        pInicioExa[i]=pInicioExa[i-1]+programasRAM[i-1].tam;
+    }
+    for (let i = 0; i < 16; i++) {
+        pInicioExa[i]=pInicioExa[i].toString(16);
+    }
+    console.log(pInicioDes);
+    console.log(pInicioExa)
+    $d.addEventListener("click", e => {
+        if (e.target.matches(".article__pEjecucion") || e.target.matches(".article__pEjecucion span")) {
+            if (e.target.children[0].textContent === "S.O.") {
+                posP = 0;
+            }else{
+                let posPrograma = parseInt(e.target.getAttribute("data-number"));
+                for (let i = 1; i < 16; i++){
+                    if (i+1 === posPrograma) {
+                        posP = pInicioExa[i];
+                    }
+                }
+                $d.querySelectorAll(".article__programa").forEach((e, i) => {
+                    console.log("DD");
+                    if (i===0) {
+                        e.children[0].textContent = `PROCESO: ${posPrograma-1}`
+                    }else if (i===1) {
+                        e.children[0].textContent = `DIRECCÓN: ${posP}`
+                    }else if (i===2){
+                        e.children[0].textContent = `MEMORIA: ${pInicioDes[posPrograma-1]}`
+                    }
+                });
+                console.log(posPrograma);
+            }
+        }
+    });
+}
+
+posPrograma();
