@@ -19,67 +19,59 @@
     <aside class="panel">
         <!-- nav.menu>a[href="#seccion$"]*5{Sección $} emmet distribucion VSC-->
         <nav class="menu">
-            <a href="index.html">Particiones estáticas fijas</a>
+            <a href="eFijas.html">Particiones estáticas fijas</a>
             <a href="eVariables.html">Particiones estáticas variables</a>
-            <a href="#seccion3">Particiones dinámicas sin compactación</a>
-            <a href="#seccion4">Particiones dinámicas con compactación</a>
+            <a href="index.html">Particiones dinámicas con/sin compactación</a>
         </nav>
     </aside>
-    <h1>PARTICIONES ESTÁTICAS FIJAS</h1>
-    <section class="main">
-        <h2>PROGRAMAS</h2>
-        <h2>RAM</h2>
-        <h2>SISTEMA OPERATIVO</h2>
-        <div class="icons">
+    <form id="inicio">
+        <div>
+            <input type="radio" name="com" id="cc" value="1" required>
+            <label for="cc">Con compactación</label><br>
+            <input type="radio" name="com" id="sc" value="0" required>
+            <label for="sc">Sin compactación</label>
         </div>
-        <div class="ram">
-            <article class="article__pEjecucion" data-number="1"><span></span></article>
-            <article class="article__pEjecucion" data-number="2"><span></span></article>
-            <article class="article__pEjecucion" data-number="3"><span></span></article>
-            <article class="article__pEjecucion" data-number="4"><span></span></article>
-            <article class="article__pEjecucion" data-number="5"><span></span></article>
-            <article class="article__pEjecucion" data-number="6"><span></span></article>
-            <article class="article__pEjecucion" data-number="7"><span></span></article>
-            <article class="article__pEjecucion" data-number="8"><span></span></article>
-            <article class="article__pEjecucion" data-number="9"><span></span></article>
-            <article class="article__pEjecucion" data-number="10"><span></span></article>
-            <article class="article__pEjecucion" data-number="11"><span></span></article>
-            <article class="article__pEjecucion" data-number="12"><span></span></article>
-            <article class="article__pEjecucion" data-number="13"><span></span></article>
-            <article class="article__pEjecucion" data-number="14"><span></span></article>
-            <article class="article__pEjecucion" data-number="15"><span></span></article>
-            <article class="article__pEjecucion" data-number="16"><span></span></article>
+        <div>
+            <input type="radio" name="caso" id="pc" value="0">
+            <label for="pc">Primer caso</label><br>
+            <input type="radio" name="caso" id="mc" value="1">
+            <label for="mc">Mejor caso</label><br>
+            <input type="radio" name="caso" id="pec" value="2">
+            <label for="pec">Peor caso</label>
         </div>
-        <div class="SO">
-            <article class="article__DataSO"><span></span></article>
-            <article class="article__DataSO"><span></span></article>
-            <article class="article__DataSO"><span></span></article>
-            <article class="article__DataSO"><span></span></article>
-        </div>
-        <div class="almacenamiento">
-            <div><h2>DATOS DE ALMACENAMIENTO</h2></div>
-            <div>
-                <article class="article__Almacenamiento usada"><span>USADA: </span></article>
-                <article class="article__Almacenamiento libre"><span>LIBRE: </span></article>
+        <section>
+            <input type="submit" value="Comenzar">
+        </section>
+    </form>
+    <section class="main none">
+        <div class="icons"></div>
+        <section>
+            <div class="ram"></div>
+            <div class="stats">
+                <div class="so"><span><b>S.O.</b></span></div>
+                <div class="prog"><span><b>Detalles de programa</b></span></div>
+                <div class="mem"><span><b>Memoria</b></span></div>
             </div>
-        </div>
-
+        </section>
     </section>
-
-    <h2>DETALLES DEL PROGRAMA</h2>
-    <div class="proc">
-        <article><span>Item</span></article>
-        <article><span>Nombre</span></article>
-        <article><span>Tamaño en disco</span></article>
-        <article><span>Tamaño codigo</span></article>
-        <article><span>Datos inicializados</span></article>
-        <article><span>Datos sin inicializar</span></article>
-        <article><span>Memoria inicial</span></article>
-        <article><span>Memoria inicial (KiB)</span></article>
-    </div>
-    <!-- <a href="eVariables.html">Particiones variables</a> -->
-    <script src="js/pEFijas.js"></script>
-    <script src="js/menu.js" type="module"></script>
+    <div class="proc none"></div>
+    <form id="nuevo">
+        <h2>Nuevo Programa</h2>
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" id="nombre" maxlength="30" required>
+            <label for="codigo">Tamaño de codigo:</label>
+            <input type="number" name="codigo" id="codigo" min="0" required>
+            <label for="datos">Tamaño de datos:</label>
+            <input type="number" name="datos" id="datos" min="0" required>
+            <label for="bss">Tamaño de bss:</label>
+            <input type="number" name="bss" id="bss" min="0" required>
+            <label for="icon">Icono:</label>
+            <input type="url" name="icon" id="icon">
+        </div>
+        <input type="submit" value="Crear">
+    </form>
+    <script src="js/index.js"></script>
 </body>
 
 </html>

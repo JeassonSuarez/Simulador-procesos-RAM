@@ -141,17 +141,22 @@ libre = 16*1024*1024,
 usado = 1*1024*1024;
 
 
-
-for (let p of programas) {
-    p.resize();
-    if (p.nombre!=="S.O.") {
-        fig = `<figure data-name="${p.nombre}">
-        <img src="${p.logo}" alt="${p.nombre}" data-name="${p.nombre}">
-        <figcaption data-name="${p.nombre}"><span data-name="${p.nombre}">${p.nombre}</span></figcaption>
-        </figure>`;
-        $d.querySelector(".icons").innerHTML += fig;
+let renderProgramas = () => {
+    fig = ``;
+    $d.querySelector(".icons").innerHTML = fig;
+    for (let p of programas) {
+        p.resize();
+        if (p.nombre!=="S.O.") {
+            fig = `<figure data-name="${p.nombre}">
+            <img src="${p.logo}" alt="${p.nombre}" data-name="${p.nombre}">
+            <figcaption data-name="${p.nombre}"><span data-name="${p.nombre}">${p.nombre}</span></figcaption>
+            </figure>`;
+            $d.querySelector(".icons").innerHTML += fig;
+        }
     }
 }
+
+renderProgramas();
 
 col = randomColor();
 segs[0].querySelector("span").textContent = SO.nombre;
@@ -229,8 +234,7 @@ datos();
 
 const calculos = () => {
 let usada = 0,
-    libre = 16*1024*1024,
-    pdif = 0;
+    libre = 16*1024*1024;
 
     programasRAM.forEach((e, i) => {
         if (!(e.programa === noProgram)) {
@@ -298,6 +302,7 @@ let pAjuste = () => {
                             if (elemento.memoria < e.tam && e.programa === noProgram ) {
                                 //console.log("CABE");
                                 e.programa = elemento;
+                                //console.log(programasRAM);
                                 pEjecutados++;
                                 //console.log(pEjecutados);
                                 break;
@@ -312,18 +317,11 @@ let pAjuste = () => {
                         renderizar();
                         detalle();
                         calculos();
-                        // programasRAM.forEach(element => {
-                        //     console.log(element.tam,"-",element.programa.nombre);
-                        // });
                     }
                 });
             }
         }
-
     paraPrograma(e);
-    // for (const e of programasRAM) {
-    //     console.log(e.programa.nombre);
-    // }
     });
 }
 
@@ -459,33 +457,12 @@ $ajuste.addEventListener("change", e =>{
     }
 })
 
-// let i = 0;
-// for (const e of programasRAM) {
-// i++;
-// console.log(`Memoria en pos ${i}: ${e.tam}`);
-// console.log(`Programa clickeado: ${elemento.memoria}`);
-// console.log(`Programa Clickeado < pos ${i}:${(elemento.memoria < e.tam) }`);
-// console.log("--------------------------------");
-
-// for (const e of programasRAM) {
-// if (menor <= e.tam) {
-// menor = menor;
-// }else{
-// menor = e.tam;
-// }
-// }
-
-// if (elemento.memoria < e.tam && e.programa === noProgram ) {
-// //console.log("CABE");
-// e.programa = elemento;
-// pEjecutados++;
-// //console.log(pEjecutados);
-// break;
-// }else if(elemento.memoria > e.tam){
-// i++
-// // console.log(i);
-// if (i===15) {
-// alert(`El programa ${elemento.nombre} pesa ${elemento.memoria} y no es posible ejecutarlo, ya que no cabe en las particiones`);
-// }
-// }
-// }
+$d.getElementById("nuevo").addEventListener("submit", (e) => {
+    let $n = e.target;
+    e.preventDefault();
+    let programaNuevo = new Program($n.nombre.value, parseInt($n.codigo.value), parseInt($n.datos.value), parseInt($n.bss.value), $n.icon.value);
+    programas.push(programaNuevo);
+    $n.reset();
+    renderProgramas();
+    console.log(programas);
+});

@@ -125,16 +125,22 @@ for (let index = 0; index < 15; index++) {
   programasRAM.push(noProgram);
 }
 
-for (let p of programas) {
-  p.resize();
-  if (p.nombre!=="S.O.") {
-  fig = `<figure data-name="${p.nombre}">
-    <img src="${p.logo}" alt="${p.nombre}" data-name="${p.nombre}">
-    <figcaption data-name="${p.nombre}"><span data-name="${p.nombre}">${p.nombre}</span></figcaption>
-  </figure>`;
-  $d.querySelector(".icons").innerHTML += fig;
+let renderProgramas = () => {
+  fig = ``;
+  $d.querySelector(".icons").innerHTML = fig;
+  for (let p of programas) {
+      p.resize();
+      if (p.nombre!=="S.O.") {
+          fig = `<figure data-name="${p.nombre}">
+          <img src="${p.logo}" alt="${p.nombre}" data-name="${p.nombre}">
+          <figcaption data-name="${p.nombre}"><span data-name="${p.nombre}">${p.nombre}</span></figcaption>
+          </figure>`;
+          $d.querySelector(".icons").innerHTML += fig;
+      }
   }
 }
+
+renderProgramas();
 
 
 col = randomColor();
@@ -278,7 +284,6 @@ const calculos = () => {
   let usada = 1*1024*1024,
     libre = 16*1024*1024,
     pdif = 0;
-
     programasRAM.forEach((e, i) => {
       if (!(e === noProgram)) {
         pdif++;
@@ -288,7 +293,16 @@ const calculos = () => {
     $d.querySelector(".usada").children[0].textContent = `USADA: ${usada}`;
     libre = libre-usada;
     $d.querySelector(".libre").children[0].textContent = `LIBRE: ${libre}`;
-
 }
 
 calculos();
+
+$d.getElementById("nuevo").addEventListener("submit", (e) => {
+  let $n = e.target;
+  e.preventDefault();
+  let programaNuevo = new Program($n.nombre.value, parseInt($n.codigo.value), parseInt($n.datos.value), parseInt($n.bss.value), $n.icon.value);
+  programas.push(programaNuevo);
+  $n.reset();
+  renderProgramas();
+  console.log(programas);
+});
