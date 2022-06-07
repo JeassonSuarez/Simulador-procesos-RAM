@@ -15,6 +15,16 @@
   --container-width: 1200px;  /*Container a maxima anchura*/
 }
 
+
+h1, h2{
+  width: fit-content;
+  margin: 30px auto 10px;
+}
+
+h1{
+  margin-bottom: 0;
+}
+
 .panel-btn{
   position: fixed;
   z-index: 999;
